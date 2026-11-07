@@ -24,7 +24,7 @@ variable "allowed_web_cidrs" {
       ])
 
     )
-    error_message = "Provide at least one valid IPv4 CIDR, such as 223.185.51.189/32."
+    error_message = "Provide at least one valid IPv4 CIDR, such as 0.0.0.0/32."
   }
 }
 variable "log_retention_days" {
