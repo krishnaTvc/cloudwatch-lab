@@ -1,0 +1,42 @@
+# Terraform downloaded providers and modules
+**/.terraform/*
+
+# Terraform state — may contain sensitive values
+*.tfstate
+*.tfstate.*
+
+# Terraform variable files containing local values/secrets
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+
+# Saved Terraform plans
+*.tfplan
+tfplan
+
+# Terraform crash logs and local CLI configuration
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+
+# Credentials and environment variables
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated logs
+*.log
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python cache, if using Python scripts
+__pycache__/
+*.pyc
+.venv/

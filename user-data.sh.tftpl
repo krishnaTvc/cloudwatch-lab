@@ -1,0 +1,44 @@
+#!/bin/bash
+set -euxo pipefail
+
+# Install the web server and monitoring agent.
+dnf install -y nginx amazon-cloudwatch-agent
+
+# Create a simple application page.
+cat > /usr/share/nginx/html/index.html <<'HTML'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CloudWatch Lab</title>
+</head>
+<body>
+  <h1>Welcome to the CloudWatch lab</h1>
+  <p>Nginx is running on EC2.</p>
+  <p>Refresh this page to generate access logs.</p>
+</body>
+</html>
+HTML
+
+# Start Nginx and enable it after reboots.
+systemctl enable --now nginx
+
+# Enable SSM for terminal access.
+systemctl enable --now amazon-ssm-agent
+
+# Write the CloudWatch agent configuration.
+cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'JSON'
+${agent_config}
+JSON
+
+# Enable and start the agent with our configuration.
+systemctl enable amazon-cloudwatch-agent
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -s
+
+# Generate an initial request so the access log contains an event.
+curl --fail http://127.0.0.1/
